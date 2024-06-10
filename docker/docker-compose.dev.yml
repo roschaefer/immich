@@ -33,6 +33,7 @@ services:
     ports:
       - 3001:3001
       - 9230:9230
+      - 8081:8081
     depends_on:
       - redis
       - database
@@ -110,14 +111,14 @@ services:
     command: ["postgres", "-c" ,"shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
 
   # set IMMICH_METRICS=true in .env to enable metrics
-  # immich-prometheus:
-  #   container_name: immich_prometheus
-  #   ports:
-  #     - 9090:9090
-  #   image: prom/prometheus
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - prometheus-data:/prometheus
+  immich-prometheus:
+    container_name: immich_prometheus
+    ports:
+      - 9090:9090
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
 
   # first login uses admin/admin
   # add data source for http://immich-prometheus:9090 to get started
